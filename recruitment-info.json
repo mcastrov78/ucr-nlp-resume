@@ -12,9 +12,21 @@
 	'offerSkills': ['Java', 'DB2', 'MongoDB', 'Agile'],
 	'resumeSkills': ['Hibernate', 'MySQL', 'Scrum']
 	},
-		{
+	{
+	'offerSkills': [],
+	'resumeSkills': ['OOP', 'Hibernate', 'MongoDB', 'Agile']
+	},
+	{
+	'offerSkills': ['OOP', 'Hibernate', 'MongoDB', 'Agile'],
+	'resumeSkills': []
+	},
+	{
 	'offerSkills': ['C-Sharp', 'DB2', 'MongoDB'],
 	'resumeSkills': ['OOP', 'MySQL', 'MongoDB', 'Agile']
+	},
+	{
+	'offerSkills': ['Java', 'Scrum'],
+	'resumeSkills': ['OOP', 'Hibernate', 'MongoDB', 'Agile']
 	}
 ]
 }

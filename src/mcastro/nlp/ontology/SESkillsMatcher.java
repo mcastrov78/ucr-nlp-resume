@@ -1,14 +1,9 @@
 package mcastro.nlp.ontology;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -16,41 +11,45 @@ import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * SESkillsMatcher is intended to match skill in a job offer against skills in a resume with with help of a Software Engineering Ontology 
+ * @author mcastro
+ *
+ */
 public class SESkillsMatcher {
 
-    @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger(SESkillsMatcher.class);
-    // SE ontology namespace
+	/**  SE ontology file name */
+    public static final String ONTOLOGY_PATH = "software-engineering.ontology.owl";
+    /** SE ontology namespace */
     public static final String SE_NS = "http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#";
-    
-    public static final String JSON_SKILLS_KEY = "skills"; 
+    /** JSON Key for offersAndResumes element */    
+    public static final String OFFERS_AND_RESUMES_JSON_KEY = "offersAndResumes";
+    /** JSON Key for offerSkills element */
+    public static final String OFFER_SKILLS_JSON_KEY = "offerSkills";
+    /** JSON Key for resumeSkills element */
+    public static final String RESUMES_SKILLS_JSON_KEY = "resumeSkills";
     
     /**
-     * 
-     * @param model
-     * @param className
-     * @return
+     * Finds an ontology class if found by the given class name (and the namespace)
+     * @param model ontology model
+     * @param className class name to look for
+     * @return an ontology class or <code>null</code>
      */
     public OntClass getClass(OntModel model, String className) {
     	return model.getOntClass(SE_NS + className);
     }
     
     /**
-     * 
-     * @param model
-     * @param className
-     * @return
+     * Finds ontology super classes for the given class name
+     * @param model ontology model
+     * @param className class name to look for
+     * @return a list of ontology super classes
      */
     public List<OntClass> getSuperClasses(OntModel model, String className) {
     	OntClass ontClass = getClass(model, className);
@@ -64,10 +63,10 @@ public class SESkillsMatcher {
     }
     
     /**
-     * 
-     * @param model
-     * @param className
-     * @return
+     * Finds ontology subclasses for the given class name
+     * @param model ontology model
+     * @param className class name to look for
+     * @return a list of ontology subclasses
      */
     public List<OntClass> getSubClasses(OntModel model, String className) {
     	OntClass ontClass = getClass(model, className);
@@ -81,9 +80,9 @@ public class SESkillsMatcher {
     }
     
     /**
-     * 
-     * @param ontClassList
-     * @return
+     * Converts a list of ontology classes to a list of strings with the names of those classes
+     * @param ontClassList a list of ontology classes
+     * @return a list of strings with the names of those classes
      */
     public List<String> getOntClassListAsStringList(List<OntClass> ontClassList) {
     	List<String> classNames = new ArrayList<>();
@@ -96,14 +95,15 @@ public class SESkillsMatcher {
     }
     
     /**
-     * 
-     * @param jsonArray
-     * @return
+     * Converts a JSON array to a list of strings with the values in the array
+     * @param jsonArray JSON array
+     * @return list of strings with the values in the array
      */
     public List<String> getListFromJsonArray(JsonArray jsonArray) {
     	List<String> list = new ArrayList<>();
     	
     	for (ListIterator<JsonValue> it = jsonArray.listIterator(); it.hasNext(); ) {
+    		// remove quotation marks and convert to lower case
     		list.add(it.next().toString().replace("\"", "").toLowerCase());    		
     	}
     	
@@ -111,16 +111,90 @@ public class SESkillsMatcher {
     }
     
     /**
-     * 
-     * @param matchingArray
-     * @return
+     * Calculates a score per each skill required in the offer, and places scores in an array that is as big as the number of required skills
+     * @param offerSkills skills required in the offer
+     * @param resumeSkills skills present in the resume
+     * @return an array with scores that is as big as the number of required skills
      */
-    public float getCalculatedTotalScore(List<Float> matchingArray) {
+    public List<Float> getMatchingScore(JsonValue offerSkills, JsonValue resumeSkills) {    	
+    	List<String> offerSkillsArray = new ArrayList<>();
+    	List<String> resumeSkillsArray = new ArrayList<>();
+    	List<Float> matchingArray = new ArrayList<>();
+    	
+		// create ontology model
+    	OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+		FileManager.get().readModel(model, ONTOLOGY_PATH);
+    	
+    	// get list of offer skills 
+		offerSkillsArray = getListFromJsonArray(offerSkills.getAsArray());
+    	System.out.println("Offer Skills: " + offerSkillsArray);
+    	
+    	// get list of resume skills
+    	resumeSkillsArray = getListFromJsonArray(resumeSkills.getAsArray());
+    	System.out.println("Resume Skills: " + resumeSkillsArray);
+    	
+    	// start processing based on what the offer requires
+    	for (String offerSkill: offerSkillsArray) { 		
+    		if (resumeSkillsArray.contains(offerSkill)) {
+    			// resume contains the skill, add 1
+    			matchingArray.add(1f);
+    		}
+    		else {
+    			// calculate a secondary score for a skill in the offer by looking at super classes and subclasses of that skill, 
+    			// and if any of those are present in the resume skills list
+    			System.out.println(offerSkill + " NOT Found in Resume");
+    			matchingArray.add(calculateSecondaryScore(model, offerSkill, resumeSkillsArray));
+			}
+		}
+    	
+    	return matchingArray;
+    }
+
+	/**
+	 * Calculates a secondary score for a skill in the offer by looking at super classes and subclasses of that skill and if 
+	 * any of those are present in the resume skills list
+	 * @param model ontology model
+	 * @param offerSkill offer skill required
+	 * @param resumeSkillsArray all skills available in the resume
+	 * @return a secondary score for a skill
+	 */
+	private float calculateSecondaryScore(OntModel model, String offerSkill, List<String> resumeSkillsArray) {
+		List<String> superClasses = getOntClassListAsStringList(getSuperClasses(model, offerSkill));
+		List<String> subClasses = getOntClassListAsStringList(getSubClasses(model, offerSkill));
+		float secondaryScore = 0f;
+
+		System.out.println("\tSuperClasses: " + superClasses);
+		System.out.println("\tSubClasses: " + subClasses);
+		
+		// if the resume contains a skill present as super class of the required skill in the offer, add 0.5
+		for (String relatedSkill : superClasses) {
+			if (resumeSkillsArray.contains(relatedSkill)) {
+				secondaryScore = 0.5f;
+			}
+		}
+		
+		// if the resume contains a skill present as sub class of the required skill in the offer, add 0.5
+		for (String relatedSkill : subClasses) {
+			if (resumeSkillsArray.contains(relatedSkill)) {
+				secondaryScore += 0.5f;
+			}
+		}
+		
+		return secondaryScore;
+	}
+	
+    /**
+     * Takes a list of values with the score for each skill required in an offer, and returns a unified score 
+     * @param matchingArray list of values with the score for each skill required in an offer
+     * @return a unified score
+     */
+    public float calculateTotalScore(List<Float> matchingArray) {
     	int numberOfDesiredSkills = matchingArray.size();
     	float maxPercentagePerSkill =  1f / numberOfDesiredSkills;
     	float totalScore = 0f;
     	
     	for (Float skillScore : matchingArray) {
+    		// each skill's score is multiplied by maxPercentagePerSkill so we can have 1 as max possible score 
     		totalScore += (skillScore * maxPercentagePerSkill);
     	}
     	
@@ -128,62 +202,8 @@ public class SESkillsMatcher {
     }
     
     /**
-     * 
-     * @param offerSkills
-     * @param resumeSkills
-     */
-    public void getMatchingScore(JsonValue offerSkills, JsonValue resumeSkills) {    	
-    	List<String> offerSkillsArray = new ArrayList<>();
-    	List<String> resumeSkillsArray = new ArrayList<>();
-    	List<Float> matchingArray = new ArrayList<>();
-    	
-		String ontologyPath = "software-engineering.ontology.owl";
-		OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-		FileManager.get().readModel(model, ontologyPath);
-		//model.write(System.out) ; // print the owl file to make sure that you did
-    	
-    	offerSkillsArray = getListFromJsonArray(offerSkills.getAsArray());
-    	System.out.println("Offer Skills: " + offerSkillsArray);
-    	
-    	resumeSkillsArray = getListFromJsonArray(resumeSkills.getAsArray());
-    	System.out.println("Resume Skills: " + resumeSkillsArray);
-    	
-    	for (String offerSkill: offerSkillsArray) {
-    		List<String> superClasses = null;
-    		List<String> subClasses = null;
-    		
-    		if (resumeSkillsArray.contains(offerSkill)) {
-    			matchingArray.add(1f);
-    		}
-    		else {
-    			float secondaryScore = 0f;
-    			superClasses = getOntClassListAsStringList(getSuperClasses(model, offerSkill));
-    			subClasses = getOntClassListAsStringList(getSubClasses(model, offerSkill));
-    			System.out.println(offerSkill + " NOT Found in Resume");
-    			System.out.println("\tSuperClasses: " + superClasses);
-    			System.out.println("\tSubClasses: " + subClasses);
-    			
-    			for (String relatedSkill : superClasses) {
-    				if (resumeSkillsArray.contains(relatedSkill)) {
-    					secondaryScore = 0.5f;
-    				}
-    			}
-    			
-    			for (String relatedSkill : subClasses) {
-    				if (resumeSkillsArray.contains(relatedSkill)) {
-    					secondaryScore = 0.5f;
-    				}
-    			}
-    			matchingArray.add(secondaryScore);
-    		}
-    	}
-    	System.out.println("Matching per Skill: " + matchingArray);
-    	System.out.println("Calculated Total Score: " + getCalculatedTotalScore(matchingArray));
-    }
-	
-	/**
-	 * 
-	 * @param args
+	 * Main method. Reads JSON file with offers and resumes and starts the matching and scoring process
+	 * @param args expects a JSON file name as first and only argument 
 	 */
     public static void main(String[] args) {
 		SESkillsMatcher seSkillsMatcher = new SESkillsMatcher();
@@ -192,18 +212,23 @@ public class SESkillsMatcher {
 			try {
 				JsonObject offersAndResumes = JSON.parse(new FileInputStream(new File(args[0])));
 				
-				for (JsonValue offerAndResume : offersAndResumes.get("offersAndResumes").getAsArray()) {
-					JsonValue offerSkills = offerAndResume.getAsObject().get("offerSkills").getAsArray();
-					JsonValue resumeSkills = offerAndResume.getAsObject().get("resumeSkills").getAsArray();
+				for (JsonValue offerAndResume : offersAndResumes.get(OFFERS_AND_RESUMES_JSON_KEY).getAsArray()) {
+					JsonValue offerSkills = offerAndResume.getAsObject().get(OFFER_SKILLS_JSON_KEY).getAsArray();
+					JsonValue resumeSkills = offerAndResume.getAsObject().get(RESUMES_SKILLS_JSON_KEY).getAsArray();
 
-					seSkillsMatcher.getMatchingScore(offerSkills, resumeSkills);
+					List<Float> matchingArray = seSkillsMatcher.getMatchingScore(offerSkills, resumeSkills);
+					float calculatedScore = seSkillsMatcher.calculateTotalScore(matchingArray);
+					
+			    	System.out.println("Matching per Skill: " + matchingArray);
+			    	System.out.println("Calculated Total Score: " + calculatedScore);
 					System.out.println("\n");
 				}
-				
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		else {
+			System.out.println("Please provide the JSON file name with offers and resumes information as parameter.");
 		}
 	}
 

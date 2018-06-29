@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#"
+     xml:base="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#agile -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#agile">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#methodology"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#c-sharp -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#c-sharp">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#oop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#database -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#database">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#software-engineering"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#hibernate -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#hibernate">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#java"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#java -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#java">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#oop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#kanban -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#kanban">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#agile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#methodology -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#methodology">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#software-engineering"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#mongodb -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#mongodb">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#nosql"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#mysql -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#mysql">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#rdbms"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#nosql -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#nosql">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#database"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#oop -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#oop">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#programming"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#programming -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#programming">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#software-engineering"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#rdbms -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#rdbms">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#database"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#scrum -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#scrum">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#agile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#software-engineering -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#software-engineering"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#spring -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#spring">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#java"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#waterfall -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#waterfall">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mcastro/ontologies/2018/5/software-engineering-ontology#methodology"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

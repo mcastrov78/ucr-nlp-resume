@@ -1,0 +1,11 @@
+{
+'offersAndResumes': [
+	{
+	'offerSkills': ['Java', 'MySQL', 'Scrum'],
+	'resumeSkills': ['Hibernate', 'MySQL', 'Ágil']
+	},
+	{
+	'offerSkills': ['C-Sharp', 'DB2', 'MongoDB'],
+	'resumeSkills': ['OOP', 'MySQL', 'MongoDB', 'Ágil']
+	},
+}

@@ -180,6 +180,11 @@ public class SESkillsMatcher {
 			}
 		}
 		
+		// possible values for secondaryScore should only be 0, 0.5 and 1 
+		if (secondaryScore > 1) {
+			secondaryScore = 1;
+		}
+		
 		return secondaryScore;
 	}
 	
